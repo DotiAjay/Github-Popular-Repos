@@ -1,0 +1,97 @@
+import {Component} from 'react'
+import FilterItem from '../LanguageFilterItem'
+import RepositoryItem from '../RepositoryItem'
+import Loader from 'react-loader-spinner'
+import './index.css'
+
+const languageFiltersData = [
+  {id: 'ALL', language: 'All'},
+  {id: 'JAVASCRIPT', language: 'Javascript'},
+  {id: 'RUBY', language: 'Ruby'},
+  {id: 'JAVA', language: 'Java'},
+  {id: 'CSS', language: 'CSS'},
+]
+
+// Write your code here
+
+class GithubPopularRepos extends Component {
+  state = {
+    ActiveId: languageFiltersData[0].id,
+
+    reposList: [],
+    isLoading: true,
+    isSucces: false,
+  }
+
+  ChangeActiveId = selectedId => {
+    console.log(selectedId)
+    this.setState({ActiveId: selectedId, isLoading: true})
+    this.getRepoList()
+  }
+
+  componentDidMount() {
+    this.getRepoList()
+  }
+
+  getRepoList = async () => {
+    const {ActiveId} = this.state
+    const response = await fetch(
+      `https://apis.ccbp.in/popular-repos?language=${ActiveId}`,
+    )
+    const data = await response.json()
+
+    if (response.ok === true) {
+      const updateList = data.popular_repos.map(each => ({
+        name: each.name,
+        id: each.id,
+        issuesCount: each.issues_count,
+        forksCount: each.forks_count,
+        starsCount: each.stars_count,
+        avatarUrl: each.avatar_url,
+      }))
+      this.setState({reposList: updateList, isLoading: false, isSucces: true})
+    } else {
+      this.setState({isSucces: false, isLoading: false})
+    }
+  }
+  renderFaliure = () => {
+    return (
+      <img
+        src="https://assets.ccbp.in/frontend/react-js/api-failure-view.png "
+        alt=""
+      />
+    )
+  }
+  render() {
+    const {ActiveId, reposList, isLoading} = this.state
+    return (
+      <div className="mainBg">
+        <h1 className="heading">Popular</h1>
+
+        <ul type="none" className="filterList">
+          {languageFiltersData.map(eachItem => (
+            <FilterItem
+              languageFilters={eachItem}
+              uniqkey={eachItem.id}
+              ChangeActiveId={this.ChangeActiveId}
+              isActive={eachItem.id === ActiveId}
+            />
+          ))}
+        </ul>
+        <ul type="none" className="filterList">
+          {isLoading ? (
+            <div data-testid="loader">
+              <Loader type="ThreeDots" color="#0284c7" height={80} width={80} />
+            </div>
+          ) : (
+            reposList.map(eachItem => (
+              <RepositoryItem ItemDetails={eachItem} key={eachItem.id} />
+            ))
+          )}
+        </ul>
+      </div>
+    )
+  }
+}
+
+export default GithubPopularRepos
