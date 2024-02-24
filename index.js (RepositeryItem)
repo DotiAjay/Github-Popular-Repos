@@ -1,0 +1,44 @@
+// Write your code here
+import {Component} from 'react'
+
+import './index.css'
+
+class RepositoryItem extends Component {
+  render() {
+    const {ItemDetails, key} = this.props
+    const {id, name, issuesCount, forksCount, starsCount, avatarUrl} =
+      ItemDetails
+    return (
+      <li className="itemCard">
+        <img src={avatarUrl} alt={name} className="logo" />
+        <h1 className="nameHeading">{name}</h1>
+        <div className="imageDisplay">
+          <img
+            src="https://assets.ccbp.in/frontend/react-js/stars-count-img.png"
+            alt="stars"
+            className="starImg"
+          />
+          <p>{starsCount} stars</p>
+        </div>
+        <div className="imageDisplay">
+          <img
+            src="https://assets.ccbp.in/frontend/react-js/forks-count-img.png"
+            alt="forks"
+            className="starImg"
+          />
+          <p>{forksCount} forks</p>
+        </div>
+        <div className="imageDisplay">
+          <img
+            src="https://assets.ccbp.in/frontend/react-js/issues-count-img.png"
+            alt="open issues"
+            className="starImg"
+          />
+          <p>{issuesCount} issues</p>
+        </div>
+      </li>
+    )
+  }
+}
+
+export default RepositoryItem
