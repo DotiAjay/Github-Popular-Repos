@@ -1,0 +1,26 @@
+// Write your code here
+import {Component} from 'react'
+import './index.css'
+
+class FilterItem extends Component {
+  render() {
+    const {languageFilters, uniqkey, ChangeActiveId, isActive} = this.props
+    const {language, id} = languageFilters
+    const ChangeActive = () => {
+      ChangeActiveId(id)
+    }
+    const selectedStyle = isActive ? 'selectedBut' : null
+    return (
+      <li>
+        <button
+          onClick={ChangeActive}
+          className={`filteredButton ${selectedStyle}`}
+        >
+          {language}
+        </button>
+      </li>
+    )
+  }
+}
+
+export default FilterItem
